@@ -294,6 +294,10 @@ include $(BUILD_SYSTEM)/envsetup.mk
 # See envsetup.mk for a description of SCAN_EXCLUDE_DIRS
 FIND_LEAVES_EXCLUDES := $(addprefix --prune=, $(SCAN_EXCLUDE_DIRS) .repo .git)
 
+ifneq ($(PROTON_BUILD),)
+include vendor/proton/config/BoardConfigProton.mk
+endif
+
 # The build system exposes several variables for where to find the kernel
 # headers:
 #   TARGET_DEVICE_KERNEL_HEADERS is automatically created for the current
@@ -1227,6 +1231,14 @@ dont_bother_goals := out \
     recoveryimage-nodeps \
     vbmetaimage-nodeps \
     product-graph dump-products
+
+ifneq ($(PROTON_BUILD),)
+ifneq ($(wildcard device/proton/sepolicy/common/sepolicy.mk),)
+## We need to be sure the global selinux policies are included
+## last, to avoid accidental resetting by device configs
+$(eval include device/proton/sepolicy/common/sepolicy.mk)
+endif
+endif
 
 ifeq ($(CALLED_FROM_SETUP),true)
 include $(BUILD_SYSTEM)/ninja_config.mk

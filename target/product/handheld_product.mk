@@ -27,12 +27,16 @@ PRODUCT_PACKAGES += \
     Contacts \
     DeskClock \
     Gallery2 \
-    LatinIME \
     Music \
     OneTimeInitializer \
     preinstalled-packages-platform-handheld-product.xml \
     SettingsIntelligence \
     frameworks-base-overlays
+
+ifeq ($(PROTON_BUILD),)
+PRODUCT_PACKAGES += \
+    LatinIME
+endif
 
 PRODUCT_PACKAGES_DEBUG += \
     frameworks-base-overlays-debug
